@@ -1,0 +1,8 @@
+-------------------------------------------------------------------------------
+Test set: com.hyf.demo.DemoApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 2, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 4.563 s <<< FAILURE! - in com.hyf.demo.DemoApplicationTests
+t1  Time elapsed: 0.203 s  <<< ERROR!
+java.util.NoSuchElementException: No value present
+	at com.hyf.demo.DemoApplicationTests.t1(DemoApplicationTests.java:30)
+
