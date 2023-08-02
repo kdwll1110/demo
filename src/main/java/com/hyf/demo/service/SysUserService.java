@@ -1,13 +1,11 @@
 package com.hyf.demo.service;
 
-import com.hyf.demo.entity.request.UserRequest;
 import com.hyf.demo.entity.SysUser;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.hyf.demo.util.Result;
+import com.hyf.demo.entity.request.SysUserRequest;
+import com.hyf.demo.entity.response.SysUserResponse;
 
 public interface SysUserService extends IService<SysUser> {
 
-    Integer insertUser(UserRequest userRequest);
-
-    SysUser login(UserRequest userForm);
+    SysUserResponse login(SysUserRequest sysUserRequest);
 }

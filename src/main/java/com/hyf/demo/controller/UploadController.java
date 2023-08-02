@@ -2,7 +2,7 @@ package com.hyf.demo.controller;
 
 import com.hyf.demo.constant.CommonConstant;
 import com.hyf.demo.service.UploadService;
-import com.hyf.demo.util.Result;
+import com.hyf.demo.result.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;

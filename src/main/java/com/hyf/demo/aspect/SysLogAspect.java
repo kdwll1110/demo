@@ -2,6 +2,7 @@ package com.hyf.demo.aspect;
 
 import com.hyf.demo.annotation.OperationType;
 import com.hyf.demo.entity.SysLog;
+import com.hyf.demo.enums.OperationTypeEnum;
 import com.hyf.demo.mapper.SysLogMapper;
 import com.hyf.demo.service.SysLogService;
 import org.aspectj.lang.JoinPoint;
@@ -35,7 +36,6 @@ public class SysLogAspect {
      * 1、创建切点
      */
     @Pointcut("@annotation(com.hyf.demo.annotation.OperationType)")
-    //@Pointcut("execution(* com.hyf.demo.service.*.*(..))")
     public void logPointcut(){}
 
     /**
@@ -88,7 +88,7 @@ public class SysLogAspect {
                     endTime = System.currentTimeMillis();
                     long logResponseTime = endTime - startTime;
                     //业务功能描述
-                    String action = method.getAnnotation(OperationType.class).action();
+                    OperationTypeEnum action = method.getAnnotation(OperationType.class).action();
                     //封装成log对象
                     SysLog sysLog = new SysLog(
                             null,
@@ -99,7 +99,7 @@ public class SysLogAspect {
                             logResponseTime+"ms",
                             ip,
                             null,
-                            action);
+                            action.getInfo());
                     //新增日志记录
                     sysLogService.save(sysLog);
 

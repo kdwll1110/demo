@@ -10,6 +10,7 @@ import com.aliyun.oss.internal.OSSHeaders;
 import com.aliyun.oss.model.*;
 import com.hyf.demo.annotation.OperationType;
 import com.hyf.demo.entity.OSSProperties;
+import com.hyf.demo.enums.OperationTypeEnum;
 import com.hyf.demo.exception.BizException;
 import com.hyf.demo.service.UploadService;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +31,7 @@ public class UploadServiceImpl implements UploadService {
     private OSSProperties ossProperties;
 
 
-    @OperationType(action = "文件上传操作")
+    @OperationType(action = OperationTypeEnum.UPLOADING)
     @Override
     public String uploadImages(MultipartFile file) {
         log.info("文件名，{}", file.getOriginalFilename());

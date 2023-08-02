@@ -1,6 +1,7 @@
-package com.hyf.demo.util;
+package com.hyf.demo.handler;
 
 import com.hyf.demo.exception.BizException;
+import com.hyf.demo.result.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -27,6 +28,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public Result handlerException(Exception exception){
+        log.info("全局——异常原因：{}",exception.getMessage());
         return Result.fail(exception.getMessage());
     }
 

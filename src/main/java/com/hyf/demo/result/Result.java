@@ -1,7 +1,6 @@
-package com.hyf.demo.util;
+package com.hyf.demo.result;
 
 import com.hyf.demo.constant.CommonConstant;
-import io.swagger.annotations.ApiResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,6 +30,9 @@ public class Result {
         return new Result(true,200,msg,null);
     }
 
+    public static Result success(Object data){
+        return new Result(true,200,CommonConstant.OPERATE_SUCCESS,data);
+    }
 
     public static Result success(String msg,Object data){
         return new Result(true,200,msg,data);

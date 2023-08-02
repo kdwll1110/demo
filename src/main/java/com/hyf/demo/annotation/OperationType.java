@@ -1,5 +1,7 @@
 package com.hyf.demo.annotation;
 
+import com.hyf.demo.enums.OperationTypeEnum;
+
 import java.lang.annotation.*;
 
 @Documented
@@ -10,6 +12,5 @@ public @interface OperationType {
     /**
      * 业务功能描述
      */
-    String action() default "";
-
+    OperationTypeEnum action() default OperationTypeEnum.OTHER;
 }

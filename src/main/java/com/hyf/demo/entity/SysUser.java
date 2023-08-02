@@ -1,11 +1,11 @@
 package com.hyf.demo.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
 import java.util.Date;
+
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -52,9 +52,16 @@ public class SysUser implements Serializable {
     private String avatar;
 
     /**
+     * 状态（1：正常，0：停用）
+     */
+    @TableField("status")
+    private Integer status;
+
+    /**
      * 逻辑删除
      */
     @TableField(value = "is_deleted")
+    @TableLogic
     private Integer isDeleted;
 
     /**
