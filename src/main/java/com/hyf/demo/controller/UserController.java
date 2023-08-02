@@ -1,10 +1,8 @@
 package com.hyf.demo.controller;
 
-import cn.hutool.core.util.DesensitizedUtil;
 import com.hyf.demo.constant.CommonConstant;
-import com.hyf.demo.dto.UserDTO;
-import com.hyf.demo.entity.User;
-import com.hyf.demo.service.UserService;
+import com.hyf.demo.entity.request.UserRequest;
+import com.hyf.demo.service.SysUserService;
 import com.hyf.demo.util.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -20,7 +18,7 @@ import javax.annotation.Resource;
 public class UserController {
 
     @Resource
-    private UserService userService;
+    private SysUserService sysUserService;
 
     @GetMapping
     @ApiOperation("测试操作")
@@ -30,14 +28,14 @@ public class UserController {
 
     @PostMapping("/login")
     @ApiOperation("登录操作")
-    public Result login(@RequestBody @Validated UserDTO userForm){
-        return Result.success(CommonConstant.OPERATE_SUCCESS,userService.login(userForm));
+    public Result login(@RequestBody @Validated UserRequest userForm){
+        return Result.success(CommonConstant.OPERATE_SUCCESS,sysUserService.login(userForm));
     }
 
     @PostMapping("/insert")
     @ApiOperation("新增用户操作")
-    public Result insertUser(@RequestBody @Validated UserDTO userDTO){
-        userService.insertUser(userDTO);
+    public Result insertUser(@RequestBody @Validated UserRequest userRequest){
+        sysUserService.insertUser(userRequest);
         return Result.success(CommonConstant.OPERATE_SUCCESS);
     }
 
