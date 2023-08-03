@@ -44,6 +44,13 @@ public class SysPermission implements Serializable {
     private String path;
 
     /**
+     * 状态
+     */
+    @TableField(value = "status")
+    private String status;
+
+
+    /**
      * 图标
      */
     @TableField(value = "icon")
