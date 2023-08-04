@@ -1,48 +1,71 @@
 package com.hyf.demo.service.impl;
 
-import cn.dev33.satoken.stp.StpUtil;
-import cn.dev33.satoken.temp.SaTempUtil;
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.http.HttpStatus;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.hyf.demo.annotation.OperationType;
+import com.hyf.demo.entity.MyUserDetails;
 import com.hyf.demo.entity.SysUser;
 import com.hyf.demo.entity.request.SysUserRequest;
-import com.hyf.demo.entity.response.SysUserResponse;
 import com.hyf.demo.exception.BizException;
 import com.hyf.demo.service.SysUserService;
 import com.hyf.demo.mapper.SysUserMapper;
+import com.hyf.demo.util.JwtUtil;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser>
-    implements SysUserService{
+    implements SysUserService {
+
+    @Resource
+    private AuthenticationManager authenticationManager;
+
+    @Resource
+    private RedisTemplate redisTemplate;
 
     @Override
-    public SysUserResponse login(SysUserRequest sysUserRequest) {
+    public Map<String, Object> login(SysUserRequest sysUserRequest) {
 
-        SysUser sysUser = lambdaQuery().eq(SysUser::getUsername, sysUserRequest.getUsername())
-                .eq(SysUser::getPassword, sysUserRequest.getPassword())
-                .one();
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(sysUserRequest.getUsername(), sysUserRequest.getPassword());
 
-        if (ObjectUtil.isEmpty(sysUser)){
-            throw new BizException(HttpStatus.HTTP_UNAUTHORIZED,"用户名或密码错误！");
+        Authentication authentication = authenticationManager.authenticate(authenticationToken);
+
+        if (authentication==null){
+            throw new BizException(HttpStatus.HTTP_UNAUTHORIZED,"用户名或密码错误");
         }
 
-        if (sysUser.getStatus()==0){
-            throw new BizException(HttpStatus.HTTP_UNAUTHORIZED,"账号已被停用！");
-        }
+        MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
 
-        //根据账号id，进行登录
-        StpUtil.login(sysUser.getId());
+        String sysUserId = myUserDetails.getSysUser().getId().toString();
 
-        SysUserResponse sysUserResponse = BeanUtil.copyProperties(sysUser, SysUserResponse.class);
+        String token = JwtUtil.createJWT(sysUserId);
 
+        //存入security上下文
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
-        return sysUserResponse;
+        //存入redis
+        redisTemplate.opsForValue().set("login:"+sysUserId,myUserDetails, 30, TimeUnit.MINUTES);
+
+        //封装
+        HashMap<String, Object> map = new HashMap<>();
+
+        map.put("token",token);
+
+        return map;
     }
+
+
+
+
 }
 
 

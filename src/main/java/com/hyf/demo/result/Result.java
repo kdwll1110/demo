@@ -26,10 +26,6 @@ public class Result {
         return new Result(true,200,CommonConstant.OPERATE_SUCCESS,null);
     }
 
-    public static Result success(String msg){
-        return new Result(true,200,msg,null);
-    }
-
     public static Result success(Object data){
         return new Result(true,200,CommonConstant.OPERATE_SUCCESS,data);
     }
