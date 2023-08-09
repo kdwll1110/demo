@@ -1,6 +1,7 @@
 package com.hyf.demo.controller;
 
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.PageUtil;
 import cn.hutool.http.HttpStatus;
 import com.hyf.demo.annotation.OperationType;
 import com.hyf.demo.entity.request.SysUserRequest;
@@ -29,6 +30,13 @@ public class SysUserController {
     @ApiOperation("登录")
     public Result login(@RequestBody @Valid SysUserRequest sysUserRequest) {
         return Result.success(sysUserService.login(sysUserRequest));
+    }
+
+    @GetMapping("queryRoleInfoAndPermissionInfo")
+    @ApiOperation("查询角色信息和菜单信息")
+    public Result queryRoleInfoAndPermissionInfo(){
+
+        return Result.success(sysUserService.queryRoleInfoAndPermissionInfo());
     }
 
     @GetMapping

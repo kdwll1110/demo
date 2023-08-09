@@ -1,13 +1,7 @@
 package com.hyf.demo.entity.response;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.hyf.demo.entity.SysPermission;
 import lombok.Data;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -15,7 +9,7 @@ import java.util.List;
  * @Date 2023/8/4 16:51
  */
 @Data
-public class SysPermissionResponse {
+public class SysMenuResponse {
     /**
      * id
      */
@@ -32,6 +26,11 @@ public class SysPermissionResponse {
     private String name;
 
     /**
+     * 组件标题
+     */
+    private String title;
+
+    /**
      * 组件名称
      */
     private String component;
@@ -44,7 +43,7 @@ public class SysPermissionResponse {
     /**
      * 状态
      */
-    private String status;
+    private Integer status;
 
 
     /**
@@ -65,5 +64,5 @@ public class SysPermissionResponse {
     /**
      * 子菜单
      */
-    private List<SysPermissionResponse> children;
+    private List<SysMenuResponse> children;
 }

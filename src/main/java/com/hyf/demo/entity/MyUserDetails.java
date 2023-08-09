@@ -1,13 +1,17 @@
 package com.hyf.demo.entity;
 
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.hyf.demo.entity.response.SysPermissionResponse;
+import com.hyf.demo.entity.response.SysMenuResponse;
+import com.hyf.demo.entity.response.SysRoleResponse;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author ikun
@@ -18,24 +22,36 @@ public class MyUserDetails implements UserDetails {
 
     private SysUser sysUser;
 
-    private List<SysPermissionResponse> sysPermissionResponses;
+    private List<SysRoleResponse> sysRoleResponses;
+    private List<SysMenuResponse> sysMenuResponses;
+
+    //存储SpringSecurity所需要的权限信息的集合
+    @JSONField(serialize = false)
+    private List<GrantedAuthority> authorities;
 
     public MyUserDetails() {
     }
 
-    public MyUserDetails(SysUser sysUser) {
+
+    public MyUserDetails(SysUser sysUser, List<SysRoleResponse> sysRoleResponses, List<SysMenuResponse> sysMenuResponses) {
         this.sysUser = sysUser;
+        this.sysRoleResponses = sysRoleResponses;
+        this.sysMenuResponses = sysMenuResponses;
     }
 
-    public MyUserDetails(SysUser sysUser, List<SysPermissionResponse> sysPermissionResponses) {
-        this.sysUser = sysUser;
-        this.sysPermissionResponses = sysPermissionResponses;
-    }
-
+    /**
+     * 把权限 封装到这里面 ，由于暂时没有，就拿组件名称代替
+     * @return
+     */
     @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        if (authorities!=null){
+            return authorities;
+        }
+        authorities = sysMenuResponses.stream().
+                map(p->new SimpleGrantedAuthority(p.getComponent())).collect(Collectors.toList());
+        return authorities;
     }
     @JsonIgnore
     @Override

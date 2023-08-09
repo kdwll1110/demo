@@ -9,4 +9,6 @@ import java.util.Map;
 public interface SysUserService extends IService<SysUser> {
 
     Map<String, Object> login(SysUserRequest sysUserRequest);
+
+    Map<String,Object> queryRoleInfoAndPermissionInfo();
 }

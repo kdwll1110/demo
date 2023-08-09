@@ -48,6 +48,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/user/login").anonymous() //对于登录接口允许匿名访问
+                // 放行swagger
+                .antMatchers("/swagger-ui.html").permitAll()
+                .antMatchers("/swagger-resources/**").permitAll()
+                .antMatchers("/webjars/**").permitAll()
+                .antMatchers("/*/api-docs").permitAll()
+                .antMatchers("/doc.html").permitAll()
                 .anyRequest().authenticated(); //除上面外的所有请求全部需要鉴权认证
 
         //把token校验过滤器添加到过滤器链中

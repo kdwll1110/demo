@@ -23,7 +23,7 @@ public class SysUserRequest {
 
     @ApiModelProperty("密码")
     @NotBlank
-    @Length(min = 6,max = 20,message = "密码长度在8-20位之间")
+    @Length(min = 6,max = 20,message = "密码长度在6-20位之间")
     private String password;
 
 //    @Pattern(regexp = "^((13[0-9])|(15[^4])|(18[0,2,3,5-9])|(17[0-8])|(147))\\d{8}$", message = "手机号格式不正确")

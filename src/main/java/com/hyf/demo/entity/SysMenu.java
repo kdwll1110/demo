@@ -9,12 +9,12 @@ import java.util.List;
 import lombok.Data;
 
 /**
- * 菜单/权限表
- * @TableName sys_permission
+ * 菜单表
+ * @TableName sys_menu
  */
-@TableName(value ="sys_permission")
+@TableName(value ="sys_menu")
 @Data
-public class SysPermission implements Serializable {
+public class SysMenu implements Serializable {
     /**
      * id
      */
@@ -34,7 +34,13 @@ public class SysPermission implements Serializable {
     private String name;
 
     /**
-     * 组件名称
+     * 组件标题
+     */
+    @TableField(value = "title")
+    private String title;
+
+    /**
+     * 组件名
      */
     @TableField(value = "component")
     private String component;
@@ -49,7 +55,7 @@ public class SysPermission implements Serializable {
      * 状态
      */
     @TableField(value = "status")
-    private String status;
+    private Integer status;
 
 
     /**
@@ -99,5 +105,5 @@ public class SysPermission implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @TableField(exist = false)
-    private List<SysPermission> children;
+    private List<SysMenu> children;
 }

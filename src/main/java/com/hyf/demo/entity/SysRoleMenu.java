@@ -3,16 +3,17 @@ package com.hyf.demo.entity;
 import com.baomidou.mybatisplus.annotation.*;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
+
 import lombok.Data;
 
 /**
- * 角色权限关联表
- * @TableName sys_role_permission
+ * 角色菜单关联表
+ * @TableName sys_role_menu
  */
-@TableName(value ="sys_role_permission")
+@TableName(value ="sys_role_menu")
 @Data
-public class SysRolePermission implements Serializable {
+public class SysRoleMenu implements Serializable {
     /**
      * id
      */
@@ -28,8 +29,8 @@ public class SysRolePermission implements Serializable {
     /**
      * 权限id
      */
-    @TableField(value = "permission_id")
-    private Integer permissionId;
+    @TableField(value = "menu_id")
+    private Integer menuId;
 
     /**
      * 乐观锁
@@ -48,13 +49,13 @@ public class SysRolePermission implements Serializable {
      * 创建时间
      */
     @TableField(value = "create_time")
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 修改时间
      */
     @TableField(value = "update_time")
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

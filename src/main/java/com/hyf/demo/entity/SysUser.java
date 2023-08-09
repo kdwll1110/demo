@@ -3,10 +3,16 @@ package com.hyf.demo.entity;
 import com.baomidou.mybatisplus.annotation.*;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * 用户表
@@ -14,6 +20,7 @@ import lombok.Data;
  */
 @TableName(value ="sys_user")
 @Data
+@Accessors(chain = true)
 public class SysUser implements Serializable {
     /**
      * 用户id
@@ -73,14 +80,18 @@ public class SysUser implements Serializable {
     /**
      * 创建时间
      */
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     @TableField(value = "create_time")
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 修改时间
      */
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     @TableField(value = "update_time")
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
