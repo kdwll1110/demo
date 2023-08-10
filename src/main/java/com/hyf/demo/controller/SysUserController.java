@@ -19,6 +19,7 @@ public class SysUserController {
     @Resource
     private ISysUserService ISysUserService;
 
+
     @PostMapping("login")
     @ApiOperation("登录")
     public Result login(@RequestBody @Valid SysUserRequest sysUserRequest) {
