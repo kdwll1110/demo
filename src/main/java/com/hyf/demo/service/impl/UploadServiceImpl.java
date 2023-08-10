@@ -2,30 +2,25 @@ package com.hyf.demo.service.impl;
 
 import cn.hutool.core.lang.UUID;
 import cn.hutool.http.HttpStatus;
-import com.aliyun.oss.ClientException;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
-import com.aliyun.oss.OSSException;
-import com.aliyun.oss.internal.OSSHeaders;
 import com.aliyun.oss.model.*;
 import com.hyf.demo.annotation.OperationType;
 import com.hyf.demo.entity.OSSProperties;
 import com.hyf.demo.enums.OperationTypeEnum;
 import com.hyf.demo.exception.BizException;
-import com.hyf.demo.service.UploadService;
+import com.hyf.demo.service.IUploadService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 @Service
 @Slf4j
-public class UploadServiceImpl implements UploadService {
+public class UploadServiceImpl implements IUploadService {
 
     @Resource
     private OSSProperties ossProperties;

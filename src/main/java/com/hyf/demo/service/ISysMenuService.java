@@ -7,6 +7,6 @@ import com.hyf.demo.entity.response.SysMenuResponse;
 import java.util.List;
 
 
-public interface SysMenuService extends IService<SysMenu> {
+public interface ISysMenuService extends IService<SysMenu> {
     List<SysMenuResponse> queryPermissionByUserId(Long userId);
 }

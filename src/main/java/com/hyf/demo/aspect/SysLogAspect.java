@@ -3,8 +3,7 @@ package com.hyf.demo.aspect;
 import com.hyf.demo.annotation.OperationType;
 import com.hyf.demo.entity.SysLog;
 import com.hyf.demo.enums.OperationTypeEnum;
-import com.hyf.demo.mapper.SysLogMapper;
-import com.hyf.demo.service.SysLogService;
+import com.hyf.demo.service.ISysLogService;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
@@ -28,7 +27,7 @@ import java.util.Map;
 public class SysLogAspect {
 
     @Resource
-    private SysLogService sysLogService;
+    private ISysLogService ISysLogService;
     Long startTime;
     Long endTime;
 
@@ -101,7 +100,7 @@ public class SysLogAspect {
                             null,
                             action.getInfo());
                     //新增日志记录
-                    sysLogService.save(sysLog);
+                    ISysLogService.save(sysLog);
 
                 }
             }

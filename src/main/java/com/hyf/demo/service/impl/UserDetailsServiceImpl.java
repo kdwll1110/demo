@@ -24,18 +24,18 @@ import java.util.List;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Resource
-    private SysUserService sysUserService;
+    private ISysUserService ISysUserService;
 
     @Resource
-    private SysMenuService sysMenuService;
+    private ISysMenuService ISysMenuService;
 
     @Resource
-    private SysRoleService sysRoleService;
+    private ISysRoleService ISysRoleService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         //根据用户名查询用户
-        SysUser sysUser = sysUserService.lambdaQuery()
+        SysUser sysUser = ISysUserService.lambdaQuery()
                 .eq(SysUser::getUsername, username)
                 .one();
         //为空抛异常
@@ -44,9 +44,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
         log.info("进来了这里");
         //查询用户角色
-        List<SysRoleResponse> sysRoleResponses = sysRoleService.queryRoleByUserId(sysUser.getId());
+        List<SysRoleResponse> sysRoleResponses = ISysRoleService.queryRoleByUserId(sysUser.getId());
         //查根据用户id询权限
-        List<SysMenuResponse> sysMenuRespons = sysMenuService.queryPermissionByUserId(sysUser.getId());
+        List<SysMenuResponse> sysMenuRespons = ISysMenuService.queryPermissionByUserId(sysUser.getId());
         //封装成UserDetails对象返回
         return new MyUserDetails(sysUser, sysRoleResponses, sysMenuRespons);
     }

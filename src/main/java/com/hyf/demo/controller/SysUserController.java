@@ -1,17 +1,10 @@
 package com.hyf.demo.controller;
 
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.PageUtil;
-import cn.hutool.http.HttpStatus;
-import com.hyf.demo.annotation.OperationType;
 import com.hyf.demo.entity.request.SysUserRequest;
-import com.hyf.demo.enums.OperationTypeEnum;
-import com.hyf.demo.exception.BizException;
 import com.hyf.demo.result.Result;
-import com.hyf.demo.service.SysUserService;
+import com.hyf.demo.service.ISysUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -24,24 +17,19 @@ import javax.validation.Valid;
 public class SysUserController {
 
     @Resource
-    private SysUserService sysUserService;
+    private ISysUserService ISysUserService;
 
     @PostMapping("login")
     @ApiOperation("登录")
     public Result login(@RequestBody @Valid SysUserRequest sysUserRequest) {
-        return Result.success(sysUserService.login(sysUserRequest));
+        return Result.success(ISysUserService.login(sysUserRequest));
     }
 
     @GetMapping("queryRoleInfoAndPermissionInfo")
-    @ApiOperation("查询角色信息和菜单信息")
+    @ApiOperation("查询当前用户的角色信息和菜单信息")
     public Result queryRoleInfoAndPermissionInfo(){
-
-        return Result.success(sysUserService.queryRoleInfoAndPermissionInfo());
+        return Result.success(ISysUserService.queryRoleInfoAndPermissionInfo());
     }
 
-    @GetMapping
-    public String hello(){
-        return "Hello world";
-    }
 
 }

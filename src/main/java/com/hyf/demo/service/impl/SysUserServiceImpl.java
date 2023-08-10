@@ -8,9 +8,9 @@ import com.hyf.demo.entity.request.SysUserRequest;
 import com.hyf.demo.entity.response.SysMenuResponse;
 import com.hyf.demo.entity.response.SysRoleResponse;
 import com.hyf.demo.exception.BizException;
-import com.hyf.demo.service.SysMenuService;
-import com.hyf.demo.service.SysRoleService;
-import com.hyf.demo.service.SysUserService;
+import com.hyf.demo.service.ISysMenuService;
+import com.hyf.demo.service.ISysRoleService;
+import com.hyf.demo.service.ISysUserService;
 import com.hyf.demo.mapper.SysUserMapper;
 import com.hyf.demo.util.JwtUtil;
 import com.hyf.demo.util.SecurityUtil;
@@ -18,7 +18,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser>
-    implements SysUserService {
+    implements ISysUserService {
 
     @Resource
     private AuthenticationManager authenticationManager;
@@ -39,10 +38,10 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser>
     private RedisTemplate redisTemplate;
 
     @Resource
-    private SysRoleService sysRoleService;
+    private ISysRoleService ISysRoleService;
 
     @Resource
-    private SysMenuService sysMenuService;
+    private ISysMenuService ISysMenuService;
 
     @Override
     public Map<String, Object> login(SysUserRequest sysUserRequest) {
@@ -82,19 +81,20 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser>
      */
     @Override
     public Map<String, Object> queryRoleInfoAndPermissionInfo() {
+
         MyUserDetails myUserDetails = SecurityUtil.getSysUserDetail();
 
         String username = myUserDetails.getSysUser().getUsername();
 
         SysUser sysUser = lambdaQuery().eq(SysUser::getUsername, username).one();
 
-        List<SysRoleResponse> sysRoleResponses = sysRoleService.queryRoleByUserId(sysUser.getId());
+        List<SysRoleResponse> sysRoleResponses = ISysRoleService.queryRoleByUserId(sysUser.getId());
 
-        List<SysMenuResponse> sysMenuResponses = sysMenuService.queryPermissionByUserId(sysUser.getId());
+        List<SysMenuResponse> sysMenuResponses = ISysMenuService.queryPermissionByUserId(sysUser.getId());
 
         Map<String,Object> map = new HashMap<>(3);
 
-        map.put("roleList",sysMenuResponses);
+        map.put("roleList",sysRoleResponses);
 
         map.put("permissionList",sysMenuResponses);
 

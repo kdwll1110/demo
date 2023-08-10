@@ -6,7 +6,7 @@ import com.hyf.demo.entity.request.SysUserRequest;
 
 import java.util.Map;
 
-public interface SysUserService extends IService<SysUser> {
+public interface ISysUserService extends IService<SysUser> {
 
     Map<String, Object> login(SysUserRequest sysUserRequest);
 

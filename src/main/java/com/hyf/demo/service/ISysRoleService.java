@@ -7,7 +7,7 @@ import com.hyf.demo.entity.response.SysRoleResponse;
 import java.util.List;
 import java.util.Set;
 
-public interface SysRoleService extends IService<SysRole> {
+public interface ISysRoleService extends IService<SysRole> {
 
     Set<Integer> queryRoleIds(Long userId);
 

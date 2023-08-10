@@ -1,5 +1,6 @@
 package com.hyf.demo.entity.response;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,5 +22,10 @@ public class SysRoleResponse  implements Serializable {
      * 角色名称
      */
     private String name;
+
+    /**
+     * 角色权限字符串
+     */
+    private String roleKey;
 
 }

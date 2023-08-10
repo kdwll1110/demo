@@ -1,7 +1,7 @@
 package com.hyf.demo.controller;
 
 import com.hyf.demo.constant.CommonConstant;
-import com.hyf.demo.service.UploadService;
+import com.hyf.demo.service.IUploadService;
 import com.hyf.demo.result.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -18,12 +18,12 @@ import javax.annotation.Resource;
 public class UploadController {
 
     @Resource
-    private UploadService uploadService;
+    private IUploadService IUploadService;
 
     @PostMapping("images")
     @ApiOperation("图片上传")
     public Result upload(@RequestBody MultipartFile file){
-        return Result.success(CommonConstant.OPERATE_SUCCESS,uploadService.uploadImages(file));
+        return Result.success(CommonConstant.OPERATE_SUCCESS, IUploadService.uploadImages(file));
     }
 
 }

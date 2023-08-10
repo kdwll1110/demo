@@ -27,6 +27,12 @@ public class SysRole implements Serializable {
     private String name;
 
     /**
+     * 角色权限字符串
+     */
+    @TableField(value = "role_key")
+    private String roleKey;
+
+    /**
      * 角色状态
      */
     @TableField(value = "status")

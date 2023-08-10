@@ -5,10 +5,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hyf.demo.entity.SysMenu;
 import com.hyf.demo.entity.SysRoleMenu;
 import com.hyf.demo.entity.response.SysMenuResponse;
-import com.hyf.demo.service.SysMenuService;
+import com.hyf.demo.service.ISysMenuService;
 import com.hyf.demo.mapper.SysMenuMapper;
-import com.hyf.demo.service.SysRoleMenuService;
-import com.hyf.demo.service.SysRoleService;
+import com.hyf.demo.service.ISysRoleMenuService;
+import com.hyf.demo.service.ISysRoleService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -20,13 +20,13 @@ import java.util.stream.Collectors;
 
 @Service
 public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu>
-    implements SysMenuService {
+    implements ISysMenuService {
 
     @Resource
-    private SysRoleService sysRoleService;
+    private ISysRoleService ISysRoleService;
 
     @Resource
-    private SysRoleMenuService sysRoleMenuService;
+    private ISysRoleMenuService ISysRoleMenuService;
 
     /**
      * 根据用户id查询权限
@@ -36,9 +36,9 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu>
      */
     public List<SysMenuResponse> queryPermissionByUserId(Long userId) {
         //根据userid查询角色id
-        Set<Integer> roleIds = sysRoleService.queryRoleIds(userId);
+        Set<Integer> roleIds = ISysRoleService.queryRoleIds(userId);
         //根据角色id查询权限菜单id
-        List<Integer> permissionIds = sysRoleMenuService.lambdaQuery()
+        List<Integer> permissionIds = ISysRoleMenuService.lambdaQuery()
                 .in(SysRoleMenu::getRoleId, roleIds)
                 .list()
                 .stream()
