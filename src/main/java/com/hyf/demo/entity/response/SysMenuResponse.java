@@ -1,5 +1,6 @@
 package com.hyf.demo.entity.response;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 
 import java.util.List;
@@ -21,14 +22,9 @@ public class SysMenuResponse {
     private Integer parentId;
 
     /**
-     * 权限名称
+     * 菜单名称
      */
     private String name;
-
-    /**
-     * 组件标题
-     */
-    private String title;
 
     /**
      * 组件名称
@@ -55,6 +51,11 @@ public class SysMenuResponse {
      * 类型(1:目录,2:菜单,3:按钮)
      */
     private Integer type;
+
+    /**
+     *权限标识
+     */
+    private String perms;
 
     /**
      * 排序

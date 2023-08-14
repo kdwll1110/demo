@@ -50,7 +50,7 @@ public class MyUserDetails implements UserDetails {
             return authorities;
         }
         authorities = sysMenuResponses.stream().
-                map(p->new SimpleGrantedAuthority(p.getComponent())).collect(Collectors.toList());
+                map(m->new SimpleGrantedAuthority(m.getPerms())).collect(Collectors.toList());
         return authorities;
     }
     @JsonIgnore

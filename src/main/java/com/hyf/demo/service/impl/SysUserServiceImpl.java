@@ -65,7 +65,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser>
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
         //存入redis
-        redisTemplate.opsForValue().set("login:"+sysUserId,myUserDetails, 30, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set("login:"+sysUserId,myUserDetails, 60, TimeUnit.MINUTES);
 
         //封装
         HashMap<String, Object> map = new HashMap<>();

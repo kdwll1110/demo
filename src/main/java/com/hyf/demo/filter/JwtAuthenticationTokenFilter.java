@@ -31,7 +31,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                                     HttpServletResponse httpServletResponse,
                                     FilterChain filterChain) throws ServletException, IOException {
         //获取请求头中的token
-        String token = httpServletRequest.getHeader("token");
+        String token = httpServletRequest.getHeader("authorization");
         //如果token为空直接放行，由于用户信息没有存放在SecurityContextHolder.getContext()中所以后面的过滤器依旧认证失败符合要求
         if(!StringUtils.hasText(token)){
             filterChain.doFilter(httpServletRequest,httpServletResponse);

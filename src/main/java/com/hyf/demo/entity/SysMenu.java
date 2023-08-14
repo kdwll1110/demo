@@ -28,16 +28,10 @@ public class SysMenu implements Serializable {
     private Integer parentId;
 
     /**
-     * 权限名称
+     * 菜单名称
      */
     @TableField(value = "name")
     private String name;
-
-    /**
-     * 组件标题
-     */
-    @TableField(value = "title")
-    private String title;
 
     /**
      * 组件名
@@ -57,7 +51,6 @@ public class SysMenu implements Serializable {
     @TableField(value = "status")
     private Integer status;
 
-
     /**
      * 图标
      */
@@ -69,6 +62,12 @@ public class SysMenu implements Serializable {
      */
     @TableField(value = "type")
     private Integer type;
+
+    /**
+     * 权限标识
+     */
+    @TableField(value = "perms")
+    private String perms;
 
     /**
      * 排序

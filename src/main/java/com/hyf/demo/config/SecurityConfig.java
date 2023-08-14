@@ -12,8 +12,12 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -46,8 +50,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()//关闭csrf
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) //不通过session获取SecurityContext
                 .and()
+                .cors()
+                .and()
                 .authorizeRequests()
-                .antMatchers("/user/login").anonymous() //对于登录接口允许匿名访问
+                .antMatchers("/user/login").anonymous()
                 // 放行swagger
                 .antMatchers("/swagger-ui.html").permitAll()
                 .antMatchers("/swagger-resources/**").permitAll()
@@ -64,5 +70,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 accessDeniedHandler(accessDeniedHandler).
                 authenticationEntryPoint(authenticationEntryPoint);
     }
+
+    CorsConfigurationSource corsConfigurationSource(){
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.setAllowedHeaders(Arrays.asList("*"));
+        corsConfiguration.setAllowedMethods(Arrays.asList("*"));
+        corsConfiguration.setAllowedOrigins(Arrays.asList("*"));
+        corsConfiguration.setMaxAge(3600L);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**",corsConfiguration);
+        return source;
+    }
+
 
 }

@@ -5,15 +5,18 @@ import com.hyf.demo.result.Result;
 import com.hyf.demo.service.ISysUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 
 @RestController
 @RequestMapping("/user")
 @Api(value = "用户接口",tags = "提供用户相关的RestAPI")
+@Slf4j
 public class SysUserController {
 
     @Resource
@@ -27,6 +30,7 @@ public class SysUserController {
 
     @GetMapping("queryRoleInfoAndPermissionInfo")
     @ApiOperation("查询当前用户的角色信息和菜单信息")
+    @CrossOrigin
     public Result queryRoleInfoAndPermissionInfo(){
         return Result.success(ISysUserService.queryRoleInfoAndPermissionInfo());
     }
