@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,13 +43,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (sysUser == null) {
             throw new BizException(HttpStatus.HTTP_UNAUTHORIZED, "用户名或密码错误");
         }
-        log.info("进来了这里");
         //查询用户角色
-        List<SysRoleResponse> sysRoleResponses = ISysRoleService.queryRoleByUserId(sysUser.getId());
+        //List<SysRoleResponse> sysRoleResponses = ISysRoleService.queryRoleByUserId(sysUser.getId());
         //查根据用户id询权限
-        List<SysMenuResponse> sysMenuRespons = ISysMenuService.queryPermissionByUserId(sysUser.getId());
+        //List<SysMenuResponse> sysMenuResponses = ISysMenuService.queryMenuByUserId(sysUser.getId());
         //封装成UserDetails对象返回
-        return new MyUserDetails(sysUser, sysRoleResponses, sysMenuRespons);
+        List<SysMenuResponse> sysMenuResponses = new ArrayList<>();
+        return new MyUserDetails(sysUser, null, sysMenuResponses);
     }
 
 

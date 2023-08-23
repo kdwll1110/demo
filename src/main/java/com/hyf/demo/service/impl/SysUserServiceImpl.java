@@ -14,6 +14,7 @@ import com.hyf.demo.service.ISysUserService;
 import com.hyf.demo.mapper.SysUserMapper;
 import com.hyf.demo.util.JwtUtil;
 import com.hyf.demo.util.SecurityUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,6 +29,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Service
+@Slf4j
 public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser>
     implements ISysUserService {
 
@@ -50,7 +52,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser>
                 new UsernamePasswordAuthenticationToken(sysUserRequest.getUsername(), sysUserRequest.getPassword());
 
         Authentication authentication = authenticationManager.authenticate(authenticationToken);
-
+        log.info("进来了这里");
         if (authentication==null){
             throw new BizException(HttpStatus.HTTP_UNAUTHORIZED,"用户名或密码错误");
         }
@@ -76,7 +78,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser>
     }
 
     /**
-     * 有点不理解项目中为什么要查询两遍，在登录时查询过一边，重新获取角色菜单信息时又查询一边
+     *
      * @return
      */
     @Override
@@ -90,13 +92,17 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser>
 
         List<SysRoleResponse> sysRoleResponses = ISysRoleService.queryRoleByUserId(sysUser.getId());
 
-        List<SysMenuResponse> sysMenuResponses = ISysMenuService.queryPermissionByUserId(sysUser.getId());
+        List<SysMenuResponse> sysMenuResponses = ISysMenuService.queryMenuByUserId(sysUser.getId());
+
+        myUserDetails.setSysRoleResponses(sysRoleResponses);
+
+        myUserDetails.setSysMenuResponses(sysMenuResponses);
 
         Map<String,Object> map = new HashMap<>(3);
 
         map.put("roleList",sysRoleResponses);
 
-        map.put("permissionList",sysMenuResponses);
+        map.put("menuList",sysMenuResponses);
 
         return map;
     }

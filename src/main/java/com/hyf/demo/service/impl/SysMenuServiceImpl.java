@@ -34,11 +34,11 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu>
      * @param userId
      * @return
      */
-    public List<SysMenuResponse> queryPermissionByUserId(Long userId) {
+    public List<SysMenuResponse> queryMenuByUserId(Long userId) {
         //根据userid查询角色id
         Set<Integer> roleIds = ISysRoleService.queryRoleIds(userId);
         //根据角色id查询权限菜单id
-        List<Integer> permissionIds = ISysRoleMenuService.lambdaQuery()
+        List<Integer> menuIds = ISysRoleMenuService.lambdaQuery()
                 .in(SysRoleMenu::getRoleId, roleIds)
                 .list()
                 .stream()
@@ -46,7 +46,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu>
                 .collect(Collectors.toList());
         //根据权限id查询权限
         List<SysMenu> sysMenuList = lambdaQuery()
-                .in(SysMenu::getId, permissionIds)
+                .in(SysMenu::getId, menuIds)
                 .list();
 
         //把原来的权限菜单 在转换树的时候，一起重新封装了一份
@@ -67,15 +67,15 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu>
         //创建集合
         List<SysMenuResponse> list = new ArrayList<>();
         //循环
-        for (SysMenu permission : sysMenuList) {
+        for (SysMenu sysMenu : sysMenuList) {
             //如果当前菜单的id 等于 传入的父级id
-            if (permission.getParentId().equals(parentId)) {
+            if (sysMenu.getParentId().equals(parentId)) {
                 //封装拷贝
-                SysMenuResponse sysMenuResponse = BeanUtil.copyProperties(permission, SysMenuResponse.class);
+                SysMenuResponse sysMenuResponse = BeanUtil.copyProperties(sysMenu, SysMenuResponse.class);
                 //加入到当前集合
                 list.add(sysMenuResponse);
                 //再给当前菜单继续递归查询，是否有子菜单（参数：当前菜单的id和所有菜单集合）
-                sysMenuResponse.setChildren(createTreeNode(Integer.valueOf(permission.getId().toString()), sysMenuList));
+                sysMenuResponse.setChildren(createTreeNode(Integer.valueOf(sysMenu.getId().toString()), sysMenuList));
             }
         }
         //返回

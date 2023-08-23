@@ -8,5 +8,5 @@ import java.util.List;
 
 
 public interface ISysMenuService extends IService<SysMenu> {
-    List<SysMenuResponse> queryPermissionByUserId(Long userId);
+    List<SysMenuResponse> queryMenuByUserId(Long userId);
 }

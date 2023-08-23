@@ -28,11 +28,15 @@ public class SysUserController {
         return Result.success(ISysUserService.login(sysUserRequest));
     }
 
-    @GetMapping("queryRoleInfoAndPermissionInfo")
-    @ApiOperation("查询当前用户的角色信息和菜单信息")
-    @CrossOrigin
-    public Result queryRoleInfoAndPermissionInfo(){
+    @GetMapping("queryMenuByToken")
+    @ApiOperation("查询当前的菜单信息")
+    public Result queryMenuByToken(){
         return Result.success(ISysUserService.queryRoleInfoAndPermissionInfo());
+    }
+
+    @GetMapping("hello")
+    public Result hello(){
+        return Result.success("GG-Bond");
     }
 
 
