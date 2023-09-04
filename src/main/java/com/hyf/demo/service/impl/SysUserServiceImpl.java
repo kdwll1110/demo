@@ -1,12 +1,18 @@
 package com.hyf.demo.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpStatus;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hyf.demo.entity.MyUserDetails;
 import com.hyf.demo.entity.SysUser;
+import com.hyf.demo.entity.query.SysUserQuery;
 import com.hyf.demo.entity.request.SysUserRequest;
 import com.hyf.demo.entity.response.SysMenuResponse;
 import com.hyf.demo.entity.response.SysRoleResponse;
+import com.hyf.demo.entity.response.SysUserResponse;
 import com.hyf.demo.exception.BizException;
 import com.hyf.demo.service.ISysMenuService;
 import com.hyf.demo.service.ISysRoleService;
@@ -23,10 +29,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -52,7 +60,6 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser>
                 new UsernamePasswordAuthenticationToken(sysUserRequest.getUsername(), sysUserRequest.getPassword());
 
         Authentication authentication = authenticationManager.authenticate(authenticationToken);
-        log.info("进来了这里");
         if (authentication==null){
             throw new BizException(HttpStatus.HTTP_UNAUTHORIZED,"用户名或密码错误");
         }
@@ -73,7 +80,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser>
         HashMap<String, Object> map = new HashMap<>();
 
         map.put("token",token);
-
+        log.info("第一步");
         return map;
     }
 
@@ -83,7 +90,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser>
      */
     @Override
     public Map<String, Object> queryRoleInfoAndPermissionInfo() {
-
+        log.info("第1.5步");
         MyUserDetails myUserDetails = SecurityUtil.getSysUserDetail();
 
         String username = myUserDetails.getSysUser().getUsername();
@@ -103,8 +110,30 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser>
         map.put("roleList",sysRoleResponses);
 
         map.put("menuList",sysMenuResponses);
-
+        log.info("第二步");
         return map;
+    }
+
+
+    @Override
+    public List<SysUserResponse> queryAllUserByPage(Integer current, Integer size, SysUserQuery query) {
+
+        LambdaQueryWrapper<SysUser> queryWrapper = new LambdaQueryWrapper<>();
+
+        if(query!=null){
+            if (StrUtil.isNotBlank(query.getUsername())){
+                queryWrapper.eq(SysUser::getUsername,query.getUsername());
+            }
+            if (StrUtil.isNotBlank(query.getTelephone())){
+                queryWrapper.eq(SysUser::getUsername,query.getTelephone());
+            }
+        }
+
+        Page<SysUser> page = baseMapper.selectPage(new Page<>(current, size), queryWrapper);
+
+        List<SysUserResponse> list = BeanUtil.copyToList(page.getRecords(), SysUserResponse.class);
+
+        return list;
     }
 
 

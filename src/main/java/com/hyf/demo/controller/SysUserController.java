@@ -40,4 +40,10 @@ public class SysUserController {
     }
 
 
+    @GetMapping("queryAllUserByPage")
+    @ApiOperation("查询所有用户信息")
+    public Result queryAllUserByPage(){
+        return Result.success(ISysUserService.queryAllUserByPage(1,3,null));
+    }
+
 }

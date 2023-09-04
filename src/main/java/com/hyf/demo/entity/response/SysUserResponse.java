@@ -26,4 +26,6 @@ public class SysUserResponse {
     @ApiModelProperty(value = "头像")
     private String avatar;
 
+    @ApiModelProperty(value = "状态")
+    private String status;
 }
