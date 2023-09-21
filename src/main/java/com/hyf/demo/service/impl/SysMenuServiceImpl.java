@@ -1,10 +1,12 @@
 package com.hyf.demo.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hyf.demo.entity.SysMenu;
 import com.hyf.demo.entity.SysRoleMenu;
 import com.hyf.demo.entity.response.SysMenuResponse;
+import com.hyf.demo.result.Result;
 import com.hyf.demo.service.ISysMenuService;
 import com.hyf.demo.mapper.SysMenuMapper;
 import com.hyf.demo.service.ISysRoleMenuService;
@@ -23,27 +25,31 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu>
     implements ISysMenuService {
 
     @Resource
-    private ISysRoleService ISysRoleService;
+    private ISysRoleService iSysRoleService;
 
     @Resource
-    private ISysRoleMenuService ISysRoleMenuService;
+    private ISysRoleMenuService iSysRoleMenuService;
 
     /**
-     * 根据用户id查询权限
+     * 根据用户id查询菜单
      *
      * @param userId
      * @return
      */
     public List<SysMenuResponse> queryMenuByUserId(Long userId) {
         //根据userid查询角色id
-        Set<Integer> roleIds = ISysRoleService.queryRoleIds(userId);
+        Set<Integer> roleIds = iSysRoleService.queryRoleIds(userId);
         //根据角色id查询权限菜单id
-        List<Integer> menuIds = ISysRoleMenuService.lambdaQuery()
+        List<Integer> menuIds = iSysRoleMenuService.lambdaQuery()
                 .in(SysRoleMenu::getRoleId, roleIds)
                 .list()
                 .stream()
                 .map(SysRoleMenu::getMenuId)
                 .collect(Collectors.toList());
+        return getSysMenuResponses(menuIds);
+    }
+
+    private List<SysMenuResponse> getSysMenuResponses(List<Integer> menuIds) {
         //根据权限id查询权限
         List<SysMenu> sysMenuList = lambdaQuery()
                 .in(SysMenu::getId, menuIds)
@@ -58,7 +64,6 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu>
 
     /**
      * 递归生成树
-     *
      * @param parentId
      * @param sysMenuList
      * @return
@@ -81,6 +86,60 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu>
         //返回
         return list;
     }
+
+
+    @Override
+    public List<SysMenuResponse> queryAllMenu() {
+        List<SysMenu> sysMenuList = lambdaQuery().list();
+        List<SysMenuResponse> treeNode = createTreeNode(1, sysMenuList);
+        return treeNode;
+    }
+
+    @Override
+    public List<SysMenuResponse> queryMenuByRoleId(Integer roleId) {
+
+        List<Integer> menuIds = iSysRoleMenuService.lambdaQuery()
+                .eq(SysRoleMenu::getRoleId, roleId)
+                .list()
+                .stream()
+                .map(SysRoleMenu::getMenuId)
+                .collect(Collectors.toList());
+        if (CollUtil.isEmpty(menuIds)) {
+            return new ArrayList<>();
+        }
+
+        return getSysMenuResponses(menuIds);
+    }
+
+    @Override
+    public Result updateMenuByRoleId(Integer roleId, Integer[] menuIds) {
+
+        if (menuIds==null || menuIds.length<1){
+            return Result.fail("请选择菜单");
+        }
+        //前端传的值
+        List<Integer> ids = CollUtil.toList(menuIds);
+        System.out.println("ids = " + ids);
+        //数据库查询
+        List<Integer> menuIdsData = iSysRoleMenuService.lambdaQuery().
+                in(SysRoleMenu::getRoleId, roleId).list().stream()
+                .map(SysRoleMenu::getMenuId).collect(Collectors.toList());
+        
+        List<Integer> addNeed = ids.stream().filter(i -> !menuIdsData.contains(i)).collect(Collectors.toList());
+        List<SysRoleMenu> roleMenus = addNeed.stream().map(m -> new SysRoleMenu(roleId, m)).collect(Collectors.toList());
+        iSysRoleMenuService.saveBatch(roleMenus);
+
+        List<Integer> removeNeed = menuIdsData.stream().filter(i -> !ids.contains(i)).collect(Collectors.toList());
+        iSysRoleMenuService.removeBatchByIds(removeNeed);
+
+
+
+
+        
+        return Result.success("操作成功",null);
+    }
+
+
 
 }
 

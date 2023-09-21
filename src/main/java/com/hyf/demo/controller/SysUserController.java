@@ -1,5 +1,6 @@
 package com.hyf.demo.controller;
 
+import com.hyf.demo.entity.query.SysUserQuery;
 import com.hyf.demo.entity.request.SysUserRequest;
 import com.hyf.demo.result.Result;
 import com.hyf.demo.service.ISysUserService;
@@ -40,10 +41,12 @@ public class SysUserController {
     }
 
 
-    @GetMapping("queryAllUserByPage")
-    @ApiOperation("查询所有用户信息")
-    public Result queryAllUserByPage(){
-        return Result.success(ISysUserService.queryAllUserByPage(1,3,null));
+    @GetMapping("queryAllUserByPage/{current}/{size}")
+    @ApiOperation("分页查询所有用户信息")
+    public Result queryAllUserByPage(@PathVariable("current") Integer current,
+                                     @PathVariable("size") Integer size,
+                                     SysUserQuery query){
+        return Result.success(ISysUserService.queryAllUserByPage(current,size,query));
     }
 
 }

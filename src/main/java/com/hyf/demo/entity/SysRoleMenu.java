@@ -5,7 +5,9 @@ import com.baomidou.mybatisplus.annotation.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 角色菜单关联表
@@ -13,7 +15,15 @@ import lombok.Data;
  */
 @TableName(value ="sys_role_menu")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class SysRoleMenu implements Serializable {
+
+    public SysRoleMenu(Integer roleId, Integer menuId) {
+        this.roleId = roleId;
+        this.menuId = menuId;
+    }
+
     /**
      * id
      */

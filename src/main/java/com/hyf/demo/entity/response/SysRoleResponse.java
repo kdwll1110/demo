@@ -28,4 +28,9 @@ public class SysRoleResponse  implements Serializable {
      */
     private String roleKey;
 
+    /**
+     * 角色状态
+     */
+    private Integer status;
+
 }

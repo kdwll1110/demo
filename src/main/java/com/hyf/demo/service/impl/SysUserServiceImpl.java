@@ -6,6 +6,7 @@ import cn.hutool.http.HttpStatus;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hyf.demo.annotation.OperationType;
 import com.hyf.demo.entity.MyUserDetails;
 import com.hyf.demo.entity.SysUser;
 import com.hyf.demo.entity.query.SysUserQuery;
@@ -13,12 +14,15 @@ import com.hyf.demo.entity.request.SysUserRequest;
 import com.hyf.demo.entity.response.SysMenuResponse;
 import com.hyf.demo.entity.response.SysRoleResponse;
 import com.hyf.demo.entity.response.SysUserResponse;
+import com.hyf.demo.enums.OperationTypeEnum;
 import com.hyf.demo.exception.BizException;
+import com.hyf.demo.result.Result;
 import com.hyf.demo.service.ISysMenuService;
 import com.hyf.demo.service.ISysRoleService;
 import com.hyf.demo.service.ISysUserService;
 import com.hyf.demo.mapper.SysUserMapper;
 import com.hyf.demo.util.JwtUtil;
+import com.hyf.demo.util.PageUtil;
 import com.hyf.demo.util.SecurityUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -29,12 +33,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -53,6 +55,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser>
     @Resource
     private ISysMenuService ISysMenuService;
 
+    @OperationType(action = OperationTypeEnum.LOGIN)
     @Override
     public Map<String, Object> login(SysUserRequest sysUserRequest) {
 
@@ -116,7 +119,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser>
 
 
     @Override
-    public List<SysUserResponse> queryAllUserByPage(Integer current, Integer size, SysUserQuery query) {
+    public PageUtil<SysUserResponse> queryAllUserByPage(Integer current, Integer size, SysUserQuery query) {
 
         LambdaQueryWrapper<SysUser> queryWrapper = new LambdaQueryWrapper<>();
 
@@ -133,7 +136,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser>
 
         List<SysUserResponse> list = BeanUtil.copyToList(page.getRecords(), SysUserResponse.class);
 
-        return list;
+        return new PageUtil(page.getCurrent(),page.getSize(),page.getTotal(),list);
     }
 
 

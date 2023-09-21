@@ -2,15 +2,21 @@ package com.hyf.demo.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpStatus;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hyf.demo.entity.SysRole;
+import com.hyf.demo.entity.SysUser;
 import com.hyf.demo.entity.SysUserRole;
+import com.hyf.demo.entity.query.SysRoleQuery;
 import com.hyf.demo.entity.response.SysRoleResponse;
 import com.hyf.demo.exception.BizException;
 import com.hyf.demo.service.ISysRoleService;
 import com.hyf.demo.mapper.SysRoleMapper;
 import com.hyf.demo.service.ISysUserRoleService;
+import com.hyf.demo.util.PageUtil;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -51,6 +57,31 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
         Set<Integer> roleIds = queryRoleIds(userId);
         List<SysRole> sysRoles = lambdaQuery().in(SysRole::getId, roleIds).list();
         return BeanUtil.copyToList(sysRoles,SysRoleResponse.class);
+    }
+
+    @Override
+    public List<SysRoleResponse> queryAllRole() {
+        List<SysRole> list = lambdaQuery().list();
+        List<SysRoleResponse> sysRoleResponses = BeanUtil.copyToList(list, SysRoleResponse.class);
+        return sysRoleResponses;
+    }
+
+    @Override
+    public PageUtil queryAllRoleByPage(Integer current, Integer size, SysRoleQuery query) {
+
+        LambdaQueryWrapper<SysRole> queryWrapper = new LambdaQueryWrapper<>();
+
+        if(query!=null){
+            if (StrUtil.isNotBlank(query.getName())){
+                queryWrapper.eq(SysRole::getName,query.getName());
+            }
+        }
+
+        Page<SysRole> page = baseMapper.selectPage(new Page<>(current, size), queryWrapper);
+
+        List<SysRoleResponse> list = BeanUtil.copyToList(page.getRecords(), SysRoleResponse.class);
+
+        return new PageUtil(page.getCurrent(),page.getSize(),page.getTotal(),list);
     }
 
 
