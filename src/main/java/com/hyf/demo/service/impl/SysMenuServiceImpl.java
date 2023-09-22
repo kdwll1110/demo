@@ -119,23 +119,21 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu>
         }
         //前端传的值
         List<Integer> ids = CollUtil.toList(menuIds);
-        System.out.println("ids = " + ids);
         //数据库查询
-        List<Integer> menuIdsData = iSysRoleMenuService.lambdaQuery().
-                in(SysRoleMenu::getRoleId, roleId).list().stream()
-                .map(SysRoleMenu::getMenuId).collect(Collectors.toList());
-        
+        List<SysRoleMenu> menuData = iSysRoleMenuService.lambdaQuery().
+                in(SysRoleMenu::getRoleId, roleId).list();
+
+        //获取该删除的
+        List<SysRoleMenu> removeNeed = menuData.stream().filter(i -> !ids.contains(i.getMenuId())).collect(Collectors.toList());
+        iSysRoleMenuService.removeByIds(removeNeed.stream().map(SysRoleMenu::getId).collect(Collectors.toList()));
+
+        //获取要新增的
+        List<Integer> menuIdsData = menuData.stream().map(SysRoleMenu::getMenuId).collect(Collectors.toList());
         List<Integer> addNeed = ids.stream().filter(i -> !menuIdsData.contains(i)).collect(Collectors.toList());
+
         List<SysRoleMenu> roleMenus = addNeed.stream().map(m -> new SysRoleMenu(roleId, m)).collect(Collectors.toList());
         iSysRoleMenuService.saveBatch(roleMenus);
 
-        List<Integer> removeNeed = menuIdsData.stream().filter(i -> !ids.contains(i)).collect(Collectors.toList());
-        iSysRoleMenuService.removeBatchByIds(removeNeed);
-
-
-
-
-        
         return Result.success("操作成功",null);
     }
 
