@@ -125,10 +125,13 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser>
 
         if(query!=null){
             if (StrUtil.isNotBlank(query.getUsername())){
-                queryWrapper.eq(SysUser::getUsername,query.getUsername());
+                queryWrapper.like(SysUser::getUsername,query.getUsername());
             }
             if (StrUtil.isNotBlank(query.getTelephone())){
-                queryWrapper.eq(SysUser::getUsername,query.getTelephone());
+                queryWrapper.like(SysUser::getTelephone,query.getTelephone());
+            }
+            if (query.getStatus()!=null){
+                queryWrapper.eq(SysUser::getStatus,query.getStatus());
             }
         }
 

@@ -2,16 +2,14 @@ package com.hyf.demo.controller;
 
 import com.hyf.demo.entity.query.SysRoleQuery;
 import com.hyf.demo.entity.query.SysUserQuery;
+import com.hyf.demo.entity.request.SysRoleRequest;
 import com.hyf.demo.result.Result;
 import com.hyf.demo.service.ISysMenuService;
 import com.hyf.demo.service.ISysRoleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -42,6 +40,21 @@ public class SysRoleController {
         return Result.success(iSysRoleService.queryAllRoleByPage(current,size,query));
     }
 
+    @GetMapping("queryRoleById/{roleId}")
+    @ApiOperation("通过id查询角色信息")
+    public Result queryRoleById(@PathVariable("roleId") Integer roleId){
+        return Result.success(iSysRoleService.queryRoleById(roleId));
+    }
 
+    @GetMapping("addRole")
+    @ApiOperation("新增角色信息")
+    public Result addRole(@RequestBody SysRoleRequest request){
+        return Result.success(iSysRoleService.addRole(request));
+    }
 
+    @GetMapping("updateRole")
+    @ApiOperation("修改角色信息")
+    public Result updateRole(@RequestBody SysRoleRequest request){
+        return Result.success(iSysRoleService.updateRole(request));
+    }
 }

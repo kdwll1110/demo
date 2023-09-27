@@ -2,15 +2,24 @@ package com.hyf.demo.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hyf.demo.entity.MyUserDetails;
 import com.hyf.demo.entity.SysMenu;
 import com.hyf.demo.entity.SysRoleMenu;
+import com.hyf.demo.entity.request.SysMenuRequest;
 import com.hyf.demo.entity.response.SysMenuResponse;
+import com.hyf.demo.entity.response.SysRoleResponse;
+import com.hyf.demo.exception.BizException;
 import com.hyf.demo.result.Result;
 import com.hyf.demo.service.ISysMenuService;
 import com.hyf.demo.mapper.SysMenuMapper;
 import com.hyf.demo.service.ISysRoleMenuService;
 import com.hyf.demo.service.ISysRoleService;
+import com.hyf.demo.util.SecurityUtil;
+import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -90,7 +99,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu>
 
     @Override
     public List<SysMenuResponse> queryAllMenu() {
-        List<SysMenu> sysMenuList = lambdaQuery().list();
+        List<SysMenu> sysMenuList = lambdaQuery().orderByAsc(SysMenu::getSort).list();
         List<SysMenuResponse> treeNode = createTreeNode(1, sysMenuList);
         return treeNode;
     }
@@ -105,7 +114,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu>
                 .map(SysRoleMenu::getMenuId)
                 .collect(Collectors.toList());
         if (CollUtil.isEmpty(menuIds)) {
-            return new ArrayList<>();
+            throw new BizException("该角色没有菜单权限");
         }
 
         return getSysMenuResponses(menuIds);
@@ -115,7 +124,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu>
     public Result updateMenuByRoleId(Integer roleId, Integer[] menuIds) {
 
         if (menuIds==null || menuIds.length<1){
-            return Result.fail("请选择菜单");
+            throw new BizException("请选择菜单");
         }
         //前端传的值
         List<Integer> ids = CollUtil.toList(menuIds);
@@ -137,6 +146,61 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu>
         return Result.success("操作成功",null);
     }
 
+    @Override
+    public Result addMenu(SysMenuRequest request) {
+        System.out.println("request = " + request);
+        SysMenu sysMenu = BeanUtil.copyProperties(request, SysMenu.class);
+
+        SysMenu parent = lambdaQuery().eq(SysMenu::getId, request.getParentId()).one();
+        String parentPath = parent.getPath();
+
+        if (StrUtil.isBlank(parentPath)){
+            parentPath = "";
+        }
+
+        sysMenu.setPath(parentPath + "/" + sysMenu.getPath());
+        save(sysMenu);
+
+        return Result.success("操作成功",null);
+    }
+
+    @Override
+    public SysMenuResponse queryMenuById(Integer menuId) {
+        SysMenu sysMenu = getById(menuId);
+        if (sysMenu==null){
+            throw new BizException("菜单不存在");
+        }
+        return BeanUtil.copyProperties(sysMenu,SysMenuResponse.class);
+    }
+
+    @Override
+    public Result updateMenu(SysMenuRequest request) {
+        SysMenu sysMenu = BeanUtil.copyProperties(request, SysMenu.class);
+        if (sysMenu.getPath().indexOf("/") != 0){
+            sysMenu.setPath("/" + sysMenu.getPath());
+        }
+        updateById(sysMenu);
+        return Result.success("操作成功",null);
+    }
+
+    @Override
+    public Result deleteMenu(Integer menuId) {
+        MyUserDetails sysUserDetail = SecurityUtil.getSysUserDetail();
+        Long userId = sysUserDetail.getSysUser().getId();
+        List<SysRoleResponse> sysRoleResponses = iSysRoleService.queryRoleByUserId(userId);
+        boolean exits = sysRoleResponses.stream().anyMatch(i -> "SUPER_ADMIN".equals(i.getRoleKey()));
+        if (!exits){
+            throw new BizException("非超级管理员不能删除");
+        }
+        removeById(menuId);
+        //删除菜单后，删除角色菜单的关联
+        List<SysRoleMenu> list = iSysRoleMenuService.lambdaQuery().in(SysRoleMenu::getMenuId, menuId).list();
+        if (CollUtil.isNotEmpty(list)){
+            iSysRoleMenuService.removeByIds(list.stream().map(SysRoleMenu::getId).collect(Collectors.toList()));
+        }
+
+        return Result.success("操作成功",null);
+    }
 
 
 }

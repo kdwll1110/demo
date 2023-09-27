@@ -13,4 +13,5 @@ public class SysUserQuery {
 
     private String telephone;
 
+    private Integer status;
 }

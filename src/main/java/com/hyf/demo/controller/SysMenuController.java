@@ -1,6 +1,7 @@
 package com.hyf.demo.controller;
 
 import com.hyf.demo.entity.query.SysRoleQuery;
+import com.hyf.demo.entity.request.SysMenuRequest;
 import com.hyf.demo.result.Result;
 import com.hyf.demo.service.ISysMenuService;
 import io.swagger.annotations.Api;
@@ -22,7 +23,7 @@ public class SysMenuController {
     @Resource
     private ISysMenuService iSysMenuService;
 
-    @RequestMapping("queryAllMenu")
+    @GetMapping("queryAllMenu")
     @ApiOperation("查询所有菜单信息")
     public Result queryAllMenu(){
         return Result.success(iSysMenuService.queryAllMenu());
@@ -38,5 +39,26 @@ public class SysMenuController {
     @ApiOperation("修改角色菜单权限信息")
     public Result updateMenuByRoleId(@PathVariable("roleId") Integer roleId, @RequestBody Integer[] menuIds){
         return Result.success(iSysMenuService.updateMenuByRoleId(roleId,menuIds));
+    }
+
+    @PostMapping("addMenu")
+    @ApiOperation("新增菜单权限信息")
+    public Result addMenu(@RequestBody SysMenuRequest request){
+        return Result.success(iSysMenuService.addMenu(request));
+    }
+
+    @GetMapping("queryMenuById/{menuId}")
+    public Result queryMenuById(@PathVariable("menuId") Integer menuId){
+        return Result.success(iSysMenuService.queryMenuById(menuId));
+    }
+
+    @PutMapping("updateMenu")
+    public Result updateMenu(@RequestBody SysMenuRequest request){
+        return Result.success(iSysMenuService.updateMenu(request));
+    }
+
+    @DeleteMapping("deleteMenu/{menuId}")
+    public Result deleteMenu(@PathVariable("menuId") Integer menuId){
+        return Result.success(iSysMenuService.deleteMenu(menuId));
     }
 }

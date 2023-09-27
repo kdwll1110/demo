@@ -11,8 +11,10 @@ import com.hyf.demo.entity.SysRole;
 import com.hyf.demo.entity.SysUser;
 import com.hyf.demo.entity.SysUserRole;
 import com.hyf.demo.entity.query.SysRoleQuery;
+import com.hyf.demo.entity.request.SysRoleRequest;
 import com.hyf.demo.entity.response.SysRoleResponse;
 import com.hyf.demo.exception.BizException;
+import com.hyf.demo.result.Result;
 import com.hyf.demo.service.ISysRoleService;
 import com.hyf.demo.mapper.SysRoleMapper;
 import com.hyf.demo.service.ISysUserRoleService;
@@ -73,7 +75,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
 
         if(query!=null){
             if (StrUtil.isNotBlank(query.getName())){
-                queryWrapper.eq(SysRole::getName,query.getName());
+                queryWrapper.like(SysRole::getName,query.getName());
             }
         }
 
@@ -82,6 +84,33 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
         List<SysRoleResponse> list = BeanUtil.copyToList(page.getRecords(), SysRoleResponse.class);
 
         return new PageUtil(page.getCurrent(),page.getSize(),page.getTotal(),list);
+    }
+
+    @Override
+    public SysRoleResponse queryRoleById(Integer roleId) {
+        SysRole sysRole = baseMapper.selectById(roleId);
+        if (sysRole==null){
+            throw new BizException(HttpStatus.HTTP_NOT_FOUND,"角色不存在");
+        }
+        return BeanUtil.copyProperties(sysRole, SysRoleResponse.class);
+
+    }
+
+    @Override
+    public Result addRole(SysRoleRequest request) {
+        if (request==null){
+            throw new BizException(HttpStatus.HTTP_NOT_FOUND,"参数不能为空");
+        }
+        SysRole sysRole = BeanUtil.copyProperties(request, SysRole.class);
+        save(sysRole);
+        return Result.success("操作成功",null);
+    }
+
+    @Override
+    public Result updateRole(SysRoleRequest request) {
+        SysRole sysRole = BeanUtil.copyProperties(request, SysRole.class);
+        updateById(sysRole);
+        return Result.success("操作成功",null);
     }
 
 
