@@ -1,6 +1,7 @@
 package com.hyf.demo.controller;
 
 import com.hyf.demo.entity.query.SysUserQuery;
+import com.hyf.demo.entity.request.LoginForm;
 import com.hyf.demo.entity.request.SysUserRequest;
 import com.hyf.demo.result.Result;
 import com.hyf.demo.service.ISysUserService;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
 
 
 @RestController
@@ -25,8 +27,8 @@ public class SysUserController {
 
     @PostMapping("login")
     @ApiOperation("登录")
-    public Result login(@RequestBody @Valid SysUserRequest sysUserRequest) {
-        return Result.success(ISysUserService.login(sysUserRequest));
+    public Result login(@RequestBody @Valid LoginForm loginForm) {
+        return Result.success(ISysUserService.login(loginForm));
     }
 
     @GetMapping("queryMenuByToken")
@@ -47,6 +49,30 @@ public class SysUserController {
                                      @PathVariable("size") Integer size,
                                      SysUserQuery query){
         return Result.success(ISysUserService.queryAllUserByPage(current,size,query));
+    }
+
+    @GetMapping("queryUserById/{userId}")
+    @ApiOperation("根据用户id查询用户信息")
+    public Result queryUserById(@PathVariable("userId") Long userId){
+        return Result.success(ISysUserService.queryUserById(userId));
+    }
+
+    @PutMapping ("updateUser")
+    @ApiOperation("修改用户信息")
+    public Result updateUser(@RequestBody @Valid SysUserRequest sysUserRequest){
+        return Result.success(ISysUserService.updateUser(sysUserRequest));
+    }
+
+    @PostMapping ("addUser")
+    @ApiOperation("新增用户信息")
+    public Result addUser(@RequestBody SysUserRequest sysUserRequest){
+        return Result.success(ISysUserService.addUser(sysUserRequest));
+    }
+
+    @PostMapping ("deleteUser")
+    @ApiOperation("删除用户信息")
+    public Result deleteUser(@RequestBody List<Integer> userIds){
+        return Result.success(ISysUserService.deleteUser(userIds));
     }
 
 }

@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -21,10 +22,22 @@ public class SysUserRequest {
     @NotBlank
     private String username;
 
-    @ApiModelProperty("密码")
+    @ApiModelProperty("手机号")
     @NotBlank
-    @Length(min = 6,max = 20,message = "密码长度在6-20位之间")
-    private String password;
+    private String telephone;
+
+    @ApiModelProperty("邮箱")
+    private String email;
+
+    @ApiModelProperty("状态")
+    private String status;
+
+    @ApiModelProperty("头像")
+    private String avatar;
+
+    @ApiModelProperty("角色列表")
+    private Set<Integer> roleIds;
+
 
 //    @Pattern(regexp = "^((13[0-9])|(15[^4])|(18[0,2,3,5-9])|(17[0-8])|(147))\\d{8}$", message = "手机号格式不正确")
 //    @ApiModelProperty("手机号")

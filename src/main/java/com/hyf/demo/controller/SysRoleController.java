@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author ikun
@@ -46,15 +47,21 @@ public class SysRoleController {
         return Result.success(iSysRoleService.queryRoleById(roleId));
     }
 
-    @GetMapping("addRole")
+    @PostMapping("addRole")
     @ApiOperation("新增角色信息")
     public Result addRole(@RequestBody SysRoleRequest request){
         return Result.success(iSysRoleService.addRole(request));
     }
 
-    @GetMapping("updateRole")
+    @PutMapping("updateRole")
     @ApiOperation("修改角色信息")
     public Result updateRole(@RequestBody SysRoleRequest request){
         return Result.success(iSysRoleService.updateRole(request));
+    }
+
+    @PostMapping("deleteRole")
+    @ApiOperation("删除角色信息")
+    public Result deleteRole(@RequestBody List<Integer> roleIds){
+        return Result.success(iSysRoleService.deleteRole(roleIds));
     }
 }

@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HttpStatus;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hyf.demo.entity.MyUserDetails;
@@ -114,7 +115,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu>
                 .map(SysRoleMenu::getMenuId)
                 .collect(Collectors.toList());
         if (CollUtil.isEmpty(menuIds)) {
-            throw new BizException("该角色没有菜单权限");
+            throw new BizException(HttpStatus.HTTP_BAD_REQUEST,"该角色尚未绑定菜单");
         }
 
         return getSysMenuResponses(menuIds);
@@ -124,7 +125,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu>
     public Result updateMenuByRoleId(Integer roleId, Integer[] menuIds) {
 
         if (menuIds==null || menuIds.length<1){
-            throw new BizException("请选择菜单");
+            throw new BizException(HttpStatus.HTTP_BAD_REQUEST,"请选择菜单");
         }
         //前端传的值
         List<Integer> ids = CollUtil.toList(menuIds);
@@ -150,7 +151,6 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu>
     public Result addMenu(SysMenuRequest request) {
         System.out.println("request = " + request);
         SysMenu sysMenu = BeanUtil.copyProperties(request, SysMenu.class);
-
         SysMenu parent = lambdaQuery().eq(SysMenu::getId, request.getParentId()).one();
         String parentPath = parent.getPath();
 
@@ -168,7 +168,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu>
     public SysMenuResponse queryMenuById(Integer menuId) {
         SysMenu sysMenu = getById(menuId);
         if (sysMenu==null){
-            throw new BizException("菜单不存在");
+            throw new BizException(HttpStatus.HTTP_BAD_REQUEST,"菜单不存在");
         }
         return BeanUtil.copyProperties(sysMenu,SysMenuResponse.class);
     }
@@ -190,7 +190,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu>
         List<SysRoleResponse> sysRoleResponses = iSysRoleService.queryRoleByUserId(userId);
         boolean exits = sysRoleResponses.stream().anyMatch(i -> "SUPER_ADMIN".equals(i.getRoleKey()));
         if (!exits){
-            throw new BizException("非超级管理员不能删除");
+            throw new BizException(HttpStatus.HTTP_UNAUTHORIZED,"非超级管理员不能删除");
         }
         removeById(menuId);
         //删除菜单后，删除角色菜单的关联

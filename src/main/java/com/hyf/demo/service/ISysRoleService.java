@@ -26,4 +26,6 @@ public interface ISysRoleService extends IService<SysRole> {
     Result addRole(SysRoleRequest request);
 
     Result updateRole(SysRoleRequest request);
+
+    Result deleteRole(List<Integer> roleIds);
 }

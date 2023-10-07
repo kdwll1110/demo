@@ -22,43 +22,54 @@ import com.hyf.demo.util.PageUtil;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
-    implements ISysRoleService {
+        implements ISysRoleService {
 
     @Resource
     private ISysUserRoleService ISysUserRoleService;
 
     /**
      * 根据传入的用户id查询中间表的角色id集合
+     *
      * @param userId
      * @return
      */
-    public Set<Integer> queryRoleIds(Long userId) {
+    public Set<Integer> queryRoleIds(Long userId){
         //根据userid查询角色id
         Set<Integer> roleIds = ISysUserRoleService.lambdaQuery()
                 .eq(SysUserRole::getUserId, userId)
                 .eq(SysUserRole::getIsDeleted, 0)
                 .list().stream().map(SysUserRole::getRoleId).collect(Collectors.toSet());
-        if (CollUtil.isEmpty(roleIds)){
-            throw new BizException(HttpStatus.HTTP_UNAUTHORIZED,"当前账号已被停用");
-        }
+        //此处是编写修改用户信息时注释的
+//        if (CollUtil.isEmpty(roleIds)) {
+//            throw new BizException(HttpStatus.HTTP_UNAUTHORIZED, "当前用户尚未绑定角色");
+//        }
         return roleIds;
     }
 
     /**
      * 返回角色信息
+     *
      * @param userId
      * @return
      */
     public List<SysRoleResponse> queryRoleByUserId(Long userId) {
         Set<Integer> roleIds = queryRoleIds(userId);
-        List<SysRole> sysRoles = lambdaQuery().in(SysRole::getId, roleIds).list();
-        return BeanUtil.copyToList(sysRoles,SysRoleResponse.class);
+        System.out.println("roleIds = " + roleIds);
+        List<SysRole> sysRoles = null;
+        try {
+            sysRoles = lambdaQuery().in(SysRole::getId, roleIds).list();
+        } catch (Exception e) {
+            throw new BizException(HttpStatus.HTTP_UNAUTHORIZED,"当前账号尚未绑定角色，无法登录");
+        }
+
+        return BeanUtil.copyToList(sysRoles, SysRoleResponse.class);
     }
 
     @Override
@@ -73,9 +84,9 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
 
         LambdaQueryWrapper<SysRole> queryWrapper = new LambdaQueryWrapper<>();
 
-        if(query!=null){
-            if (StrUtil.isNotBlank(query.getName())){
-                queryWrapper.like(SysRole::getName,query.getName());
+        if (query != null) {
+            if (StrUtil.isNotBlank(query.getName())) {
+                queryWrapper.like(SysRole::getName, query.getName());
             }
         }
 
@@ -83,14 +94,14 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
 
         List<SysRoleResponse> list = BeanUtil.copyToList(page.getRecords(), SysRoleResponse.class);
 
-        return new PageUtil(page.getCurrent(),page.getSize(),page.getTotal(),list);
+        return new PageUtil(page.getCurrent(), page.getSize(), page.getTotal(), list);
     }
 
     @Override
     public SysRoleResponse queryRoleById(Integer roleId) {
         SysRole sysRole = baseMapper.selectById(roleId);
-        if (sysRole==null){
-            throw new BizException(HttpStatus.HTTP_NOT_FOUND,"角色不存在");
+        if (sysRole == null) {
+            throw new BizException(HttpStatus.HTTP_BAD_REQUEST, "角色不存在");
         }
         return BeanUtil.copyProperties(sysRole, SysRoleResponse.class);
 
@@ -98,22 +109,50 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
 
     @Override
     public Result addRole(SysRoleRequest request) {
-        if (request==null){
-            throw new BizException(HttpStatus.HTTP_NOT_FOUND,"参数不能为空");
+        if (request == null) {
+            throw new BizException(HttpStatus.HTTP_BAD_REQUEST, "参数不能为空");
         }
         SysRole sysRole = BeanUtil.copyProperties(request, SysRole.class);
         save(sysRole);
-        return Result.success("操作成功",null);
+        return Result.success("操作成功", null);
     }
 
     @Override
     public Result updateRole(SysRoleRequest request) {
-        SysRole sysRole = BeanUtil.copyProperties(request, SysRole.class);
-        updateById(sysRole);
-        return Result.success("操作成功",null);
+        SysRole sysRole = lambdaQuery().eq(SysRole::getId, request.getId()).one();
+        if (sysRole == null) {
+            throw new BizException(HttpStatus.HTTP_BAD_REQUEST, "角色不存在");
+        }
+        updateById(BeanUtil.copyProperties(request, SysRole.class));
+        return Result.success("操作成功", null);
     }
 
+    @Override
+    public Result deleteRole(List<Integer> roleIds) {
+        roleIds.forEach(System.out::println);
+        if (CollUtil.isEmpty(roleIds)) {
+            throw new BizException(HttpStatus.HTTP_BAD_REQUEST, "请选择要删除的角色");
+        }
+        Set<Integer> userIds = ISysUserRoleService.lambdaQuery()
+                .in(SysUserRole::getRoleId, roleIds)
+                .list()
+                .stream()
+                .map(SysUserRole::getUserId)
+                .collect(Collectors.toSet());
 
+//        lambdaQuery().in(SysRole::getId, roleIds).list().stream().forEach(sysRole -> {
+//            if ("SUPER_ADMIN".equals(sysRole.getRoleKey())) {
+//                throw new BizException(HttpStatus.HTTP_BAD_REQUEST, "超级管理员禁止删除");
+//            }
+//        });
+
+        if (CollUtil.isNotEmpty(userIds)) {
+            throw new BizException(HttpStatus.HTTP_UNAUTHORIZED, "当前所选角色已被绑定，无法删除");
+        }
+        removeBatchByIds(roleIds);
+
+        return Result.success("操作成功", null);
+    }
 }
 
 

@@ -6,7 +6,6 @@ import lombok.Data;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@TableName(value ="sys_role")
 @Data
 public class SysRoleRequest implements Serializable {
     /**
@@ -29,29 +28,5 @@ public class SysRoleRequest implements Serializable {
      */
     private Integer status;
 
-    /**
-     * 备注
-     */
-    private String remark;
-
-    /**
-     * 乐观锁
-     */
-    private Integer version;
-
-    /**
-     * 逻辑删除(1:已删除，0:未删除)
-     */
-    private Integer isDeleted;
-
-    /**
-     * 创建时间
-     */
-    private LocalDateTime createTime;
-
-    /**
-     * 修改时间
-     */
-    private LocalDateTime updateTime;
 
 }

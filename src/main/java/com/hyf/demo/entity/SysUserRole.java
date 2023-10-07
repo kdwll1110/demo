@@ -5,7 +5,10 @@ import com.baomidou.mybatisplus.annotation.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 用户角色关联表
@@ -13,6 +16,8 @@ import lombok.Data;
  */
 @TableName(value ="sys_user_role")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class SysUserRole implements Serializable {
     /**
      * id
@@ -59,4 +64,9 @@ public class SysUserRole implements Serializable {
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
+
+    public SysUserRole(Integer userId, Integer roleId) {
+        this.userId = userId;
+        this.roleId = roleId;
+    }
 }

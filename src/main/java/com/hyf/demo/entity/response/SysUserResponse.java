@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+import java.util.Set;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -28,4 +31,7 @@ public class SysUserResponse {
 
     @ApiModelProperty(value = "状态")
     private String status;
+
+    @ApiModelProperty(value = "角色id列表")
+    private Set<Integer> roleIds;
 }
