@@ -52,11 +52,6 @@ public class SysUser implements Serializable {
     @TableField(value = "email")
     private String email;
 
-    /**
-     * 头像
-     */
-    @TableField(value = "avatar")
-    private String avatar;
 
     /**
      * 状态（1：正常，0：停用）

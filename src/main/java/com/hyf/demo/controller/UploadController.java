@@ -26,11 +26,4 @@ public class UploadController {
         return Result.success(CommonConstant.OPERATE_SUCCESS, IUploadService.uploadImagesToOSS(file));
     }
 
-    @PostMapping("uploadImagesToLocal")
-    @ApiOperation("图片上传到本地")
-    public Result uploadImagesToLocal(@RequestBody MultipartFile file, @RequestHeader("authorization") String token){
-        return Result.success(CommonConstant.OPERATE_SUCCESS, IUploadService.uploadImagesToLocal(file,token));
-    }
-
-
 }

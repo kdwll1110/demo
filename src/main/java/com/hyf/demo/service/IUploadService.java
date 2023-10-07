@@ -6,5 +6,4 @@ import org.springframework.web.multipart.MultipartFile;
 public interface IUploadService {
     String uploadImagesToOSS(MultipartFile file);
 
-    Result uploadImagesToLocal(MultipartFile file,String token);
 }

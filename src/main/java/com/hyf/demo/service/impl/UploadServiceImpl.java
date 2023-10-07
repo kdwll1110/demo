@@ -99,45 +99,4 @@ public class UploadServiceImpl implements IUploadService {
 
     }
 
-    @Override
-    public Result uploadImagesToLocal(MultipartFile file,String token) {
-        System.out.println("token = " + token);
-        try {
-            //解析token获取手机号
-            Claims claims = JwtUtil.parseJWT(token);
-            String subject = claims.getSubject();
-            System.out.println("subject = " + subject);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String format = sdf.format(new Date());
-
-        File folder = new File("D:\\server\\upload\\",format);
-        //File folder = new File("/opt/upload/"+type,format);
-        if (!folder.exists()) {
-            folder.mkdirs();
-        }
-
-        String oldName = file.getOriginalFilename();
-        String newName = UUID.randomUUID().toString() + oldName.substring(oldName.lastIndexOf("."));
-
-        System.out.println("newName = " + newName);
-
-        try {
-            file.transferTo(new File(folder,newName));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        String realPath = "/static/"+format+"/"+newName;
-
-        SysUser user = SecurityUtil.getSysUserDetail().getSysUser();
-        //上传到数据库
-        iSysUserService.lambdaUpdate().set(SysUser::getAvatar,realPath).eq(SysUser::getId,user.getId()).update();
-
-        //提交事务
-        return Result.success("上传成功！",realPath);
-    }
 }
