@@ -1,9 +1,5 @@
 package com.hyf.demo.enums;
 
-/**
- * @Author ikun
- * @Date 2023/8/2 16:49
- */
 public enum OperationTypeEnum {
     OTHER(0,"其他"),
     LOGIN(11,"登录"),
