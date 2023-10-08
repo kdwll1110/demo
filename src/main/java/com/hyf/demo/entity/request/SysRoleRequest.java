@@ -1,31 +1,27 @@
 package com.hyf.demo.entity.request;
 
 import com.baomidou.mybatisplus.annotation.*;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+@ApiModel(value = "角色请求对象")
 @Data
 public class SysRoleRequest implements Serializable {
-    /**
-     * id
-     */
+
+    @ApiModelProperty(value = "角色id")
     private Long id;
 
-    /**
-     * 角色名称
-     */
+    @ApiModelProperty(value = "角色名称")
     private String name;
 
-    /**
-     * 角色权限字符串
-     */
+    @ApiModelProperty(value = "角色key")
     private String roleKey;
 
-    /**
-     * 角色状态
-     */
+    @ApiModelProperty(value = "状态（1：正常，0：停用）")
     private Integer status;
 
 

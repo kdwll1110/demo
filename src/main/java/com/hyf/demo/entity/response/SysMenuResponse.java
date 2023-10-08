@@ -1,69 +1,46 @@
 package com.hyf.demo.entity.response;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.hyf.demo.entity.SysMenu;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.List;
 
-/**
- * @Author ikun
- * @Date 2023/8/4 16:51
- */
+@ApiModel(value = "菜单响应对象")
 @Data
 public class SysMenuResponse {
-    /**
-     * id
-     */
+    @ApiModelProperty(value = "菜单id")
     private Long id;
 
-    /**
-     * 父级菜单id
-     */
+    @ApiModelProperty(value = "父菜单id")
     private Integer parentId;
 
-    /**
-     * 菜单名称
-     */
+    @ApiModelProperty(value = "菜单名称")
     private String name;
 
-    /**
-     * 组件名称
-     */
+    @ApiModelProperty(value = "组件路径")
     private String component;
 
-    /**
-     * 访问路径
-     */
+    @ApiModelProperty(value = "路径")
     private String path;
 
-    /**
-     * 状态
-     */
+    @ApiModelProperty(value = "状态（1：正常，0：停用）")
     private Integer status;
 
-
-    /**
-     * 图标
-     */
+    @ApiModelProperty(value = "菜单图标")
     private String icon;
 
-    /**
-     * 类型(1:目录,2:菜单,3:按钮)
-     */
+    @ApiModelProperty(value = "菜单类型（0：目录，1：菜单，2：按钮）")
     private Integer type;
 
-    /**
-     *权限标识
-     */
+    @ApiModelProperty(value = "权限标识")
     private String perms;
 
-    /**
-     * 排序
-     */
+    @ApiModelProperty(value = "排序")
     private Integer sort;
 
-    /**
-     * 子菜单
-     */
+    @ApiModelProperty(value = "子菜单")
     private List<SysMenuResponse> children;
 }

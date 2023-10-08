@@ -11,10 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
-/**
- * @Author ikun
- * @Date 2023/9/18 10:02
- */
+
 @RestController
 @RequestMapping("/menu")
 @Api(value = "菜单接口",tags = "提供菜单相关的RestAPI")
@@ -36,28 +33,31 @@ public class SysMenuController {
     }
 
     @PutMapping("updateMenuByRoleId/{roleId}")
-    @ApiOperation("修改角色菜单权限信息")
+    @ApiOperation("修改角色菜单信息")
     public Result updateMenuByRoleId(@PathVariable("roleId") Integer roleId, @RequestBody Integer[] menuIds){
         return Result.success(iSysMenuService.updateMenuByRoleId(roleId,menuIds));
     }
 
     @PostMapping("addMenu")
-    @ApiOperation("新增菜单权限信息")
+    @ApiOperation("新增菜单")
     public Result addMenu(@RequestBody SysMenuRequest request){
         return Result.success(iSysMenuService.addMenu(request));
     }
 
     @GetMapping("queryMenuById/{menuId}")
+    @ApiOperation("根据菜单id查询菜单")
     public Result queryMenuById(@PathVariable("menuId") Integer menuId){
         return Result.success(iSysMenuService.queryMenuById(menuId));
     }
 
     @PutMapping("updateMenu")
+    @ApiOperation("修改菜单")
     public Result updateMenu(@RequestBody SysMenuRequest request){
         return Result.success(iSysMenuService.updateMenu(request));
     }
 
     @DeleteMapping("deleteMenu/{menuId}")
+    @ApiOperation("删除菜单")
     public Result deleteMenu(@PathVariable("menuId") Integer menuId){
         return Result.success(iSysMenuService.deleteMenu(menuId));
     }

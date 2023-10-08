@@ -1,15 +1,13 @@
 package com.hyf.demo.entity.request;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
 
-/**
- * @Author ikun
- * @Date 2023/10/6 10:06
- */
+@ApiModel(value = "登录请求对象")
 @Data
 public class LoginForm {
     @ApiModelProperty("用户名")

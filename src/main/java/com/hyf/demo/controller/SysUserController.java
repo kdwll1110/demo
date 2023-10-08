@@ -37,7 +37,8 @@ public class SysUserController {
         return Result.success(ISysUserService.queryRoleInfoAndPermissionInfo());
     }
 
-    @GetMapping("hello")
+    @GetMapping("helloworld")
+    @ApiOperation("测试接口")
     public Result hello(){
         return Result.success("GG-Bond");
     }

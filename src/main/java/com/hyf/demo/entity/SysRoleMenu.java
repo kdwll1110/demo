@@ -5,18 +5,15 @@ import com.baomidou.mybatisplus.annotation.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * 角色菜单关联表
- * @TableName sys_role_menu
- */
+@ApiModel(value = "SysRoleMenu对象", description = "角色菜单关联表")
 @TableName(value ="sys_role_menu")
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class SysRoleMenu implements Serializable {
 
     public SysRoleMenu(Integer roleId, Integer menuId) {
@@ -24,46 +21,32 @@ public class SysRoleMenu implements Serializable {
         this.menuId = menuId;
     }
 
-    /**
-     * id
-     */
+    @ApiModelProperty(value = "角色菜单关联表id")
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    /**
-     * 角色id
-     */
+    @ApiModelProperty(value = "角色id")
     @TableField(value = "role_id")
     private Integer roleId;
 
-    /**
-     * 权限id
-     */
+    @ApiModelProperty
     @TableField(value = "menu_id")
     private Integer menuId;
 
-    /**
-     * 乐观锁
-     */
+    @ApiModelProperty(value = "乐观锁")
     @TableField(value = "version")
     private Integer version;
 
-    /**
-     * 逻辑删除(1:已删除，0:未删除)
-     */
+    @ApiModelProperty(value = "逻辑删除")
     @TableField(value = "is_deleted")
     @TableLogic
     private Integer isDeleted;
 
-    /**
-     * 创建时间
-     */
+    @ApiModelProperty(value = "创建时间")
     @TableField(value = "create_time")
     private LocalDateTime createTime;
 
-    /**
-     * 修改时间
-     */
+    @ApiModelProperty(value = "更新时间")
     @TableField(value = "update_time")
     private LocalDateTime updateTime;
 

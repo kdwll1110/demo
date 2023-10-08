@@ -14,10 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.List;
 
-/**
- * @Author ikun
- * @Date 2023/9/15 17:09
- */
 @RestController
 @RequestMapping("/role")
 @Api(value = "角色接口",tags = "提供角色相关的RestAPI")

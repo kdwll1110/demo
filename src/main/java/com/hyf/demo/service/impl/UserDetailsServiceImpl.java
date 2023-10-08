@@ -16,10 +16,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @Author ikun
- * @Date 2023/8/4 11:24
- */
+
 @Service
 @Slf4j
 public class UserDetailsServiceImpl implements UserDetailsService {

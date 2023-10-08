@@ -12,7 +12,7 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel("用户信息响应对象")
+@ApiModel("用户响应对象")
 public class SysUserResponse {
     @ApiModelProperty("id")
     private Long id;

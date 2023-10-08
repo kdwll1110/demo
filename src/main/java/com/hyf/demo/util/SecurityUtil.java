@@ -6,10 +6,6 @@ import com.hyf.demo.exception.BizException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-/**
- * @Author ikun
- * @Date 2023/8/9 9:39
- */
 public class SecurityUtil {
 
     public static MyUserDetails getSysUserDetail() {

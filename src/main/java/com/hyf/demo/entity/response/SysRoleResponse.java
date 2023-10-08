@@ -1,36 +1,27 @@
 package com.hyf.demo.entity.response;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.io.Serializable;
 
-/**
- * 角色表
- * @TableName sys_role
- */
+@ApiModel(value = "角色响应对象")
 @Data
 public class SysRoleResponse  implements Serializable {
-    /**
-     * id
-     */
+    @ApiModelProperty(value = "角色id")
     private Long id;
 
-    /**
-     * 角色名称
-     */
+    @ApiModelProperty(value = "角色名称")
     private String name;
 
-    /**
-     * 角色权限字符串
-     */
+    @ApiModelProperty(value = "角色key")
     private String roleKey;
 
-    /**
-     * 角色状态
-     */
+    @ApiModelProperty(value = "状态（1：正常，0：停用）")
     private Integer status;
 
 }
