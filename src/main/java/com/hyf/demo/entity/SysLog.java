@@ -17,6 +17,8 @@ import lombok.NoArgsConstructor;
 @ApiModel(value = "SysLog对象", description = "日志表")
 @TableName(value ="sys_log")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SysLog implements Serializable {
     @ApiModelProperty(value = "日志id")
     @TableId(value = "log_id", type = IdType.AUTO)
