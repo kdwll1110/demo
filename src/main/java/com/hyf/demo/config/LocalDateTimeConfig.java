@@ -18,10 +18,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-/**
- * @Author ikun
- * @Date 2023/8/8 9:23
- */
 @Configuration
 public class LocalDateTimeConfig {
     private static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
