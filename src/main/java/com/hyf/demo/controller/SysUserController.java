@@ -32,7 +32,7 @@ public class SysUserController {
     }
 
     @GetMapping("queryMenuByToken")
-    @ApiOperation("查询当前的菜单信息")
+    @ApiOperation("查询当前用户的角色和菜单信息")
     public Result queryMenuByToken(){
         return Result.success(ISysUserService.queryRoleInfoAndPermissionInfo());
     }
